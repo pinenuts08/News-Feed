@@ -7,7 +7,6 @@
       id="newsLogo" 
       src="https://media.istockphoto.com/id/1268498566/vector/speech-bubble-with-breaking-news.jpg?s=612x612&w=0&k=20&c=-8F8ilSt2i-MqIBHhL4BlBEK7EDjn6fr5NBLlL3wB2Q="
     >
-    
     <NewsFeed/>
   </div>
 </template>
