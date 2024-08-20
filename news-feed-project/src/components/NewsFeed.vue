@@ -3,7 +3,7 @@
 <template>
     <div id="container">
         <h1>Breaking News</h1>
-        <div>
+        <div id="content">
             <!-- 뉴스 카테고리 셀렉트 박스 -->
             <select id="categorySelectBox" v-model="selectedOption">
                 <option value="business">business</option>
@@ -22,6 +22,13 @@
                 </li>
             </ul>
         </div>
+        
+        <!-- 페이지 버튼 -->
+        <div id="pagination">
+            <button v-for="i in totalPage" :key="i" @click="changePage(i)">
+                {{i}}
+            </button>
+        </div>
     </div>
 </template>
 
@@ -31,11 +38,14 @@ import axios from "axios";
 
 export default {
     name: 'NewsFeed',
+    
     data() {
         return {
             selectedOption: 'business',
             newsList : [],
             newsApiKey : config.newsApiKey,
+            totalPage: 1,
+            page : 1,
         }
     },
 
@@ -45,6 +55,7 @@ export default {
 
     watch: {
         selectedOption() {
+            this.page = 1;
             this.fetchNews();
         }
     },
@@ -55,7 +66,7 @@ export default {
                 endpoint : 'https://newsapi.org/v2/top-headlines?',
                 category : this.selectedOption,
                 country : 'us',
-                // page : '5',
+                page : this.page,
                 apiKey : this.newsApiKey
             };
 
@@ -63,11 +74,12 @@ export default {
         },
 
         async getNewsList(params) {
-            const url = params.endpoint + 'country=' + params.country + '&category=' + params.category + '&apiKey=' + params.apiKey;
+            const url = params.endpoint + 'country=' + params.country + '&category=' + params.category + '&page=' + params.page + '&apiKey=' + params.apiKey;
             axios
                 .get(url,{})
                 .then((res) => {
                     console.log("get response 성공");
+                    this.totalPage = Math.ceil(res.data.totalResults/20);
                     this.newsList = res.data.articles.map(news => {
                         news.title = news.title.split('-')[0].trim();
                         return news;
@@ -77,6 +89,11 @@ export default {
                     console.error(res);
                 });
         },
+
+        changePage(i) {
+            this.page = i;
+            this.fetchNews();
+        }
         
     },
 
@@ -89,7 +106,12 @@ export default {
 <style scoped>
 #container {
     width: 900px;
-    margin: 0 auto 100px auto;
+    margin: 0 auto;
+}
+
+#pagination {
+    margin-bottom: 40px;
+    margin-top: 30px;
 }
 
 li {
