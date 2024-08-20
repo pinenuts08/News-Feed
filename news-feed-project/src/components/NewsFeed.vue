@@ -25,8 +25,19 @@
         
         <!-- 페이지 버튼 -->
         <div id="pagination">
-            <button v-for="i in totalPage" :key="i" @click="changePage(i)">
+            <button v-show="prev" @click="toPrevPage">
+                Prev
+            </button>
+            <button 
+                v-for="i in totalPage" 
+                :key="i" 
+                @click="changePage(i)"
+                :class="{'active': page === i}"
+            >
                 {{i}}
+            </button>
+            <button v-show="next" @click="toNextPage">
+                Next
             </button>
         </div>
     </div>
@@ -46,7 +57,9 @@ export default {
             newsApiKey : config.newsApiKey,
             totalPage: 1,
             page : 1,
-            pageSize : 20
+            pageSize : 20,
+            prev : false,
+            next : true
         }
     },
 
@@ -57,6 +70,7 @@ export default {
     watch: {
         selectedOption() {
             this.page = 1;
+            this.setPrevNext();
             this.fetchNews();
         }
     },
@@ -93,7 +107,23 @@ export default {
 
         changePage(i) {
             this.page = i;
+            this.setPrevNext();
             this.fetchNews();
+        },
+        
+        setPrevNext() {
+            this.prev = this.page === 1 ? false : true; // 현재 페이지가 1이면 이전 페이지 존재 false 그렇지 않으면 true
+            this.next = this.page === this.totalPage ? false : true; // 현재 페이지가 총 페이지 수면 다음 페이지 존재 false 그렇지 않으면 true
+        },
+
+        toPrevPage() {
+            this.page--;
+            this.changePage(this.page);
+        },
+
+        toNextPage() {
+            this.page++;
+            this.changePage(this.page);
         }
         
     },
@@ -113,6 +143,11 @@ export default {
 #pagination {
     margin-bottom: 40px;
     margin-top: 30px;
+}
+
+#pagination button.active {
+    background-color: rgb(44, 44, 44);
+    color: white;
 }
 
 li {
