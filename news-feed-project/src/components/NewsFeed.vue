@@ -38,7 +38,7 @@ import axios from "axios";
 
 export default {
     name: 'NewsFeed',
-    
+
     data() {
         return {
             selectedOption: 'business',
@@ -46,6 +46,7 @@ export default {
             newsApiKey : config.newsApiKey,
             totalPage: 1,
             page : 1,
+            pageSize : 20
         }
     },
 
@@ -79,7 +80,7 @@ export default {
                 .get(url,{})
                 .then((res) => {
                     console.log("get response 성공");
-                    this.totalPage = Math.ceil(res.data.totalResults/20);
+                    this.totalPage = Math.ceil(res.data.totalResults/this.pageSize);
                     this.newsList = res.data.articles.map(news => {
                         news.title = news.title.split('-')[0].trim();
                         return news;
