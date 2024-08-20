@@ -76,19 +76,19 @@ export default {
 
         async getNewsList(params) {
             const url = params.endpoint + 'country=' + params.country + '&category=' + params.category + '&page=' + params.page + '&apiKey=' + params.apiKey;
-            axios
-                .get(url,{})
-                .then((res) => {
-                    console.log("get response 성공");
-                    this.totalPage = Math.ceil(res.data.totalResults/this.pageSize);
-                    this.newsList = res.data.articles.map(news => {
-                        news.title = news.title.split('-')[0].trim();
-                        return news;
-                    });
-                })
-                .catch((res) => {
-                    console.error(res);
+
+            try {
+                const res = await axios.get(url, {});
+                console.log("get response 성공");
+                this.totalPage = Math.ceil(res.data.totalResults/this.pageSize);
+                this.newsList = res.data.articles.map(news => {
+                    news.title = news.title.split('-')[0].trim();
+                    return news;
                 });
+            } catch (error) {
+                console.error(error);
+            }
+
         },
 
         changePage(i) {
