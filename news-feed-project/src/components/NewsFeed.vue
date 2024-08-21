@@ -21,7 +21,7 @@
                     {{news.title}}
                 </li>
             </ul>
-        </div>
+        </div><!-- end #content -->
         
         <!-- 페이지 버튼 -->
         <div id="pagination">
@@ -39,12 +39,11 @@
             <button v-show="next" @click="toNextPage">
                 Next
             </button>
-        </div>
-    </div>
+        </div><!-- end #pagination -->
+    </div><!-- end #container -->
 </template>
 
 <script>
-import config from "../../../apiKey.js";
 import axios from "axios";
 
 export default {
@@ -54,7 +53,7 @@ export default {
         return {
             selectedOption: 'business',
             newsList : [],
-            newsApiKey : config.newsApiKey,
+            newsApiKey : process.env.VUE_APP_NEWS_API_KEY,
             totalPage: 1,
             page : 1,
             pageSize : 20,
